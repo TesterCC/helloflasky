@@ -11,3 +11,5 @@ req.txt
 *.log
 log/
 .env
+Pipfile
+Pipfile.lock

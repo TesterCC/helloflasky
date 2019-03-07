@@ -12,6 +12,23 @@ app = Flask(__name__)
 “使用 app.route 装饰器注册视图函数是首选方法，但不是唯一的方法”
 
 摘录来自: [美] 米格尔 • 格林贝格. “Flask Web开发：基于Python的Web应用开发实战（第2版）”。
+
+run in terminal：
+cd ~/...../hello/
+flask run
+
+other usage:
+cd ~/...../hello/
+flask shell
+
+填坑：
+IsADirectoryError: [Errno 21] Is a directory: '/Users/XXXX/.env'
+这个报错是因为本地~/.env有这么一个文件夹，而这个文件夹又限于.flaskenv文件被加载。
+
+当安装了python-dotenv时，Flask在加载环境变量的优先级是：手动设置的环境变量>.env中设置的环境变量>.flaskenv设置的环境变量。
+
+解决方法：
+不用.flaskenv，改成.env 中写flask相关配置
 """
 
 
