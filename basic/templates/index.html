@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ name }}'s Watchlist - P18-19</title>
+</head>
+<body>
+    <h2>{{ name }}'s Watchlist</h2>
+{# 使用 length 过滤器获取movies变量的长度 #}
+    <p>{{ movies | length }} Titles</p>
+    <ul>
+        {% for movie in movies %}
+        <li>{{ movie.title }} - {{ movie.year }} </li>
+        {% endfor %}
+    </ul>
+</body>
+
+<footer>
+    <small>&copy;2019<a href="http://blog.fullstackpentest.com">TesterCC</a> </small>
+</footer>
+</html>

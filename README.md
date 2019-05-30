@@ -1,6 +1,6 @@
 # helloflasky
 ## About Project
-### It's a practice demo according to dog book 2ed and wolf book 1st edition.
+### It's a practice demo according to dog book 2ed edition, wolf book 1st edition and basic flask demo.
 
 ---
 
