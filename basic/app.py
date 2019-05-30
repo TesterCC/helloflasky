@@ -16,6 +16,11 @@ http://jinja.pocoo.org/docs/2.10/templates/#list-of-builtin-filters
 run in terminal:
 cd ~//helloflasky/basic
 python app.py
+
+
+在 Flask 中，我们需要创建一个 static 文件夹来保存静态文件，它应该和程序模块、templates 文件夹在同一目录层级。
+Favicon（favourite icon） 是显示在标签页和书签栏的网站头像。
+你需要准备一个 ICO、PNG 或 GIF 格式的图片，大小一般为 16×16、32×32、48×48 或 64×64 像素。
 """
 
 
@@ -40,6 +45,12 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html', name=name, movies=movies)
+
+@app.route('/about')
+def about_me():
+    username = 'Lily'
+    bio = 'human'
+    return render_template('about_me.html', username=username, bio=bio)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)

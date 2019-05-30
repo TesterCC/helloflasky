@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ name }}'s Watchlist - P18-19</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
 </head>
 <body>
-    <h2>{{ name }}'s Watchlist</h2>
+    <h2><img class="avatar" alt="Avatar" src="{{ url_for('static', filename='images/python-black_300x300.png') }}">
+        {{ name }}'s Watchlist</h2>
+
 {# 使用 length 过滤器获取movies变量的长度 #}
     <p>{{ movies | length }} Titles</p>
-    <ul>
+    <ul class="movie-list">
         {% for movie in movies %}
         <li>{{ movie.title }} - {{ movie.year }} </li>
         {% endfor %}
     </ul>
+
+    <img class="totoro" alt="Walking Totoro" src="{{ url_for('static', filename='images/totoro.gif') }}">
 </body>
 
 <footer>
-    <small>&copy;2019<a href="http://blog.fullstackpentest.com">TesterCC</a> </small>
+    <small>&copy;2019 <a href="http://blog.fullstackpentest.com">TesterCC</a> </small>
 </footer>
 </html>

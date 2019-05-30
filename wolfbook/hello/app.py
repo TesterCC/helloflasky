@@ -3,7 +3,7 @@
 __author__ = 'MFC'
 __time__ = '18/10/18 15:33'
 
-from flask import Flask
+from flask import Flask, url_for
 
 app = Flask(__name__)
 
@@ -61,8 +61,24 @@ def user(name, age):
 def other_router():
     return '<h1>Hello, other router!</h1>'
 
-
 app.add_url_rule('/other', 'other_router', other_router)
+
+
+# how to use url_for()
+@app.route('/test')
+def test_url_for():
+    # 下面是一些调用示例（请在命令行窗口查看输出的 URL）
+    print(url_for('index'))   # 输出：/
+
+    # 注意下面两个调用是如何生成包含 URL 变量的 URL 的
+    print(url_for('greet', name='Lily'))    # 输出：/greet/Lily
+    print(url_for('user', name='Alice', age=7))   # 输出：/user/Alice/7
+    print(url_for('test_url_for'))    # 输出：/test
+
+    # 下面这个调用传入了多余的关键字参数，它们会被作为查询字符串附加到 URL 后面。
+    print(url_for('test_url_for', num=2))  # 输出：/test?num=2
+    return 'Test page'
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=7777)  # default: debug=None
