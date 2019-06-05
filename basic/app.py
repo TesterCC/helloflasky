@@ -105,6 +105,42 @@ def initdb(drop):
     click.echo('Initialized database.')  # 输出提示信息
 
 
+"""
+因为有了数据库，我们可以编写一个命令函数把虚拟数据添加到数据库里。下面是用来生成虚拟数据的命令函数
+"""
+@app.cli.command()
+def forge():
+    """Generate fake data."""
+    db.create_all()
+
+    # 全局的两个变量移动到这个函数内
+    name = 'Lily Li'
+    books = [
+        {'title': 'My Neighbor Totoro', 'year': '1988'},
+        {'title': 'Dead Poets Society', 'year': '1989'},
+        {'title': 'A Perfect World', 'year': '1993'},
+        {'title': 'Leon', 'year': '1994'},
+        {'title': 'Mahjong', 'year': '1996'},
+        {'title': 'Swallowtail Butterfly', 'year': '1996'},
+        {'title': 'King of Comedy', 'year': '1999'},
+        {'title': 'Devils on the Doorstep', 'year': '1999'},
+        {'title': 'WALL-E', 'year': '2008'},
+        {'title': 'The Pork of Music', 'year': '2012'},
+        {'title': 'Fluent Python', 'year': '2015'},
+        {'title': 'Python Cookbook 3rd Edition', 'year': '2013'},
+        {'title': 'DevOps in Python', 'year': '2019'}
+    ]
+
+    user = User(name=name)
+    db.session.add(user)
+    for b in books:
+        book = Book(title=b['title'], year=b['year'])
+        db.session.add(book)
+
+    db.session.commit()
+    click.echo('Done.')
+
+
 @app.route('/')
 def index():
     user = User.query.first()   # 读取用户记录
