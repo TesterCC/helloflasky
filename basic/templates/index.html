@@ -8,7 +8,7 @@
 </head>
 <body>
     <h2><img class="avatar" alt="Avatar" src="{{ url_for('static', filename='images/python-black_300x300.png') }}">
-        {{ name }}'s Watchlist</h2>
+        {{ user.name }}'s Watchlist</h2>
 
 {# 使用 length 过滤器获取movies变量的长度 #}
     <p>{{ movies | length }} Titles</p>

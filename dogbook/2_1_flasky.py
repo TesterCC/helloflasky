@@ -13,4 +13,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)    # default: debug=None
+    app.run(debug=True, port=9898)    # default: debug=None
+    # 如果是命令行中运行该文件，优先走9898端口

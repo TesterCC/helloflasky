@@ -13,3 +13,9 @@ log/
 .env
 Pipfile
 Pipfile.lock
+*.pyc
+*~
+.DS_Store
+*.db
+htmlcov/
+.coverage
