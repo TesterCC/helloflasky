@@ -3,7 +3,6 @@
 __author__ = 'MFC'
 __time__ = '2019-05-30 14:40'
 
-
 """
 Flask入门教程   
 https://read.helloflask.com/c3-template
@@ -66,7 +65,6 @@ if WIN:  # 如果是 Windows 系统，使用三个斜线
 else:  # 否则使用四个斜线
     prefix = 'sqlite:////'
 
-
 app = Flask(__name__)
 
 # 写入了一个 SQLALCHEMY_DATABASE_URI 变量来告诉 SQLAlchemy 数据库连接地址
@@ -77,16 +75,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的
 # 在扩展类实例化前加载配置  REF: https://read.helloflask.com/c5-database
 db = SQLAlchemy(app)
 
+
 class User(db.Model):  # 表名将会是 user（自动生成，小写处理）
     id = db.Column(db.Integer, primary_key=True)  # 主键
     name = db.Column(db.String(20))  # 名字
-    email = db.Column(db.String(120), unique=True)   # 邮箱
+    email = db.Column(db.String(120), unique=True)  # 邮箱
 
 
 class Book(db.Model):  # 表名将会是 book
     id = db.Column(db.Integer, primary_key=True)  # 主键
     title = db.Column(db.String(60))  # 书籍标题
     year = db.Column(db.String(4))  # 书籍年份
+
 
 # 和 flask shell类似，我们可以编写一个自定义命令来自动执行创建数据库表操作
 import click
@@ -95,6 +95,8 @@ import click
 默认情况下，函数名称就是命令的名字，现在执行 flask initdb 命令就可以创建数据库表
 使用 flask initdb --drop 选项可以删除表后重新创建
 """
+
+
 @app.cli.command()  # 注册为命令
 @click.option('--drop', is_flag=True, help='Create after drop.')  # 设置选项
 def initdb(drop):
@@ -108,6 +110,8 @@ def initdb(drop):
 """
 因为有了数据库，我们可以编写一个命令函数把虚拟数据添加到数据库里。下面是用来生成虚拟数据的命令函数
 """
+
+
 @app.cli.command()
 def forge():
     """Generate fake data."""
@@ -143,15 +147,31 @@ def forge():
 
 @app.route('/')
 def index():
-    user = User.query.first()   # 读取用户记录
-    books = Book.query.all()    # 读取所有书籍记录
+    user = User.query.first()  # 读取用户记录
+    books = Book.query.all()  # 读取所有书籍记录
     return render_template('index.html', user=user, movies=books)
+
 
 @app.route('/about')
 def about_me():
     username = 'Lily'
     bio = 'human'
     return render_template('about_me.html', username=username, bio=bio)
+
+
+"""
+用 app.errorhandler() 装饰器注册一个错误处理函数，它的作用和视图函数类似，
+当 404 错误发生时，这个函数会被触发，返回值会作为响应主体返回给客户端
+"""
+
+
+@app.errorhandler(404)  # 传入要处理的错误代码
+def page_not_found(e):  # 接受异常对象作为参数
+    user = User.query.first()
+    return render_template('404.html', user=user), 404  # 返回 模板 和 状态码
+
+# 和我们前面编写的视图函数相比，这个函数返回了状态码作为第二个参数，普通的视图函数之所以不用写出状态码，是因为默认会使用 200 状态码，表示成功。
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)

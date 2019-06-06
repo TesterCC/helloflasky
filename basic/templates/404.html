@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ name }}'s Watchlist - P18-19</title>
-    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <title>{{ user.name }}'s Watchlist</title>
+        <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
 </head>
 <body>
@@ -11,19 +11,16 @@
         <img class="avatar" alt="Avatar" src="{{ url_for('static', filename='images/python-black_300x300.png') }}">
         {{ user.name }}'s Watchlist
     </h2>
-
-{# 使用 length 过滤器获取movies变量的长度 #}
-    <p>{{ movies | length }} Titles</p>
     <ul class="movie-list">
-        {% for movie in movies %}
-        <li>{{ movie.title }} - {{ movie.year }} </li>
-        {% endfor %}
+        <li>
+            Page Not Found - 404
+            <span class="float-right">
+                <a href="{{ url_for('index') }}">Go Back</a>
+            </span>
+        </li>
     </ul>
-
-    <img class="totoro" alt="Walking Totoro" src="{{ url_for('static', filename='images/totoro.gif') }}">
-</body>
-
 <footer>
     <small>&copy;2019 <a href="http://blog.fullstackpentest.com">TesterCC</a> </small>
 </footer>
+</body>
 </html>
