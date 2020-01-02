@@ -172,6 +172,14 @@ def page_not_found(e):  # 接受异常对象作为参数
 
 # 和我们前面编写的视图函数相比，这个函数返回了状态码作为第二个参数，普通的视图函数之所以不用写出状态码，是因为默认会使用 200 状态码，表示成功。
 
+# 对于多个模板内都需要使用的变量，我们可以使用 app.context_processor 装饰器注册一个模板上下文处理函数
+# 这个函数返回的变量（以字典键值对的形式）将会统一注入到每一个模板的上下文环境中，因此可以直接在模板中使用。
+@app.context_processor
+def inject_user():   # 函数名可以随意修改
+    user = User.query.first()
+    return dict(user=user)    # 需要返回字典，等同于return {'user': user}
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)
