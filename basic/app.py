@@ -30,12 +30,13 @@ flask run
 from basic.app import db
 db.create_all()
 
+差异：Movie 等于 Book
 """
 
 import os
 import sys
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request,url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 
 # name = 'Lily Li'
@@ -66,6 +67,8 @@ else:  # 否则使用四个斜线
     prefix = 'sqlite:////'
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
+app.config['SECRET_KEY'] = 'flask@2020'   # 等同于app.secret_key = 'flask@2020' 不设置的话POST会报错。这个密钥的值在开发时可以随便设置。基于安全的考虑，在部署时应该设置为随机字符，且不应该明文写在代码里， 在部署章节会详细介绍。
 
 # 写入了一个 SQLALCHEMY_DATABASE_URI 变量来告诉 SQLAlchemy 数据库连接地址
 # print(app.root_path)
@@ -145,11 +148,62 @@ def forge():
     click.echo('Done.')
 
 
-@app.route('/')
+# @app.route('/')
+@app.route('/', methods=['GET', 'POST'])    # 默认只接受 GET 请求
 def index():
+    if request.method == 'POST':
+        # Flask 会在请求触发后把请求信息放到 request 对象里, 比如请求的路径（request.path）、请求的方法（request.method）、表单数据（request.form）、查询字符串（request.args）等等
+        title = request.form.get('title')   # 传入表单对应输入字段的 name 值。request.form 是一个特殊的字典，用表单字段的 name 属性值可以获取用户填入的对应数据
+        year = request.form.get('year')
+
+        # 验证数据
+        # 通过在 <input> 元素内添加 required 属性实现的验证（客户端验证）并不完全可靠，我们还要在服务器端追加验证
+        # 提示:在真实世界里，你会进行更严苛的验证，比如对数据去除首尾的空格。一般情况下，我们会使用第三方库（比如 WTForms）来实现表单数据的验证工作。
+        if not title or not year or len(year) > 4 or len(title) > 60:
+            flash('Invalid input!!!')  # 显示错误提示。flash() 函数在内部会把消息存储到 Flask 提供的 session 对象里。session 用来在请求间存储数据，它会把数据签名后存储到浏览器的 Cookie 中，所以我们需要设置签名所需的密钥。
+            return redirect(url_for('index'))  # 重定向回主页
+
+        # 保存表单数据到数据库
+        movie = Book(title=title, year=year)  # 创建记录
+        db.session.add(movie)  # 添加到数据库会话
+        db.session.commit()  # 提交数据库会话
+        flash('Item created successfully.')  # 显示成功创建的提示
+        return redirect(url_for('index'))  # 重定向回主页
+
     user = User.query.first()  # 读取用户记录
     books = Book.query.all()  # 读取所有书籍记录
     return render_template('index.html', user=user, movies=books)
+
+
+@app.route('/book/edit/<int:movie_id>', methods=['GET', 'POST'])
+def edit(movie_id):
+    book = Book.query.get_or_404(movie_id)
+
+    if request.method == 'POST':  # 处理编辑表单的提交请求
+        title = request.form['title']
+        year = request.form['year']
+
+        if not title or not year or len(year) > 4 or len(title) > 60:
+            flash('Invalid input.')
+            return redirect(url_for('edit', movie_id=movie_id))  # 重定向回对应的编辑页面
+
+        book.title = title  # 更新标题
+        book.year = year  # 更新年份
+        db.session.commit()  # 提交数据库会话
+        flash('Item updated.')
+        return redirect(url_for('index'))  # 重定向回主页
+
+    return render_template('edit.html', movie=book)  # 传入被编辑的电影/书籍记录
+
+
+# 为了安全的考虑，我们一般会使用 POST 请求来提交删除请求，也就是使用表单来实现（而不是创建删除链接）
+@app.route('/movie/delete/<int:movie_id>', methods=['POST'])  # 限定只接受 POST 请求
+def delete(movie_id):
+    movie = Book.query.get_or_404(movie_id)  # 获取电影记录
+    db.session.delete(movie)  # 删除对应的记录
+    db.session.commit()  # 提交数据库会话
+    flash('Item deleted.')
+    return redirect(url_for('index'))  # 重定向回主页
 
 
 @app.route('/about')
@@ -157,6 +211,10 @@ def about_me():
     username = 'Lily'
     bio = 'human'
     return render_template('about_me.html', username=username, bio=bio)
+
+@app.route('/simple_form')
+def simple_form():
+    return render_template('simple_form.html')
 
 
 """

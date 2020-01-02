@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <!--   元素会设置页面的视口，让页面根据设备的宽度来自动缩放页面，让移动设备拥有更好的浏览体验 -->
-    <title>{{ user.name }}'s Watchlist</title>
+    <title>{{ user.name }}'s Simple Form - C7</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
     {% endblock %}
@@ -13,7 +13,7 @@
 <body>
     <h2>
         <img alt="Avatar" class="avatar" src="{{ url_for('static', filename='images/python-black_300x300.png') }}">
-        <span style="font-size: 30px">{{ user.name }}'s Watchlist</span>
+        {{ user.name }}'s Watchlist
     </h2>
     <!-- 新增导航栏 -->
     <nav>
@@ -21,7 +21,19 @@
             <li><a href="{{ url_for('index') }}">Home</a></li>
         </ul>
     </nav>
-    {% block content %}{% endblock %}
+
+<!-- 填写输入框标签文字的 <label> 元素不是必须的，只是为了辅助鼠标用户。当使用鼠标点击标签文字时，会自动激活对应的输入框，这对复选框来说比较有用。for 属性填入要绑定的 <input> 元素的 id 属性值。-->
+
+    <form method="post">  <!-- 指定提交方法为 POST -->
+        <br>
+        <label for="name">名字</label>
+        <input type="text" name="name" id="name"><br>  <!-- 文本输入框 -->
+        <label for="occupation">职业</label>
+        <input type="text" name="occupation" id="occupation"><br>  <!-- 文本输入框 -->
+        <br>
+        <input type="submit" name="submit" value="登录">  <!-- 提交按钮 -->
+    </form>
+
     <footer>
         <small>&copy; 2019-2020 <a href="http://blog.fullstackpentest.com">TesterCC</a></small>
     </footer>
