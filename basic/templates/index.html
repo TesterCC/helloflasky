@@ -3,12 +3,12 @@
 {% block content %}
     <!-- 提示:默认的块重写行为是覆盖，如果你想向父块里追加内容，可以在子块中使用 super() 声明，即 {{ super() }} -->
     <!-- 插入到页面标题上方 -->
+    <br>
 {% for message in get_flashed_messages() %}   <!-- get_flashed_messages() 函数获取提示消息并显示 -->
     <div class="alert">{{ message }}</div>
 {% endfor %}
 
-<p>{{ movies|length }} Titles</p>
-
+{% if current_user.is_authenticated %}
 <form method="post">
 <!-- autocomplete 属性设为 off 来关闭自动完成（按下输入框不显示历史输入记录）；另外还添加了 required 标志属性，如果用户没有输入内容就按下了提交按钮，浏览器会显示错误提示。-->
     <!-- 通过在 <input> 元素内添加 required 属性实现的验证（客户端验证）并不完全可靠，我们还要在服务器端追加验证 -->
@@ -16,17 +16,22 @@
     Year <input type="text" name="year" autocomplete="off" required>
     <input class="btn" type="submit" name="submit" value="Add">
 </form>
+{% endif %}
+
+<p>{{ movies|length }} Titles</p>
 
 <ul class="movie-list">
     {% for movie in movies %}
     <li>{{ movie.title }} - {{ movie.year }}
         <span class="float-right">
 
+            {% if current_user.is_authenticated %}
             <a class="btn" style="background-color: dodgerblue" href="{{ url_for('edit', movie_id=movie.id) }}">Edit</a>
 
             <form class="inline-form" method="post" action="{{ url_for('delete', movie_id=movie.id) }}">
                 <input class="btn" style="background-color: red" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure delete it?')">
             </form>
+            {% endif %}
 
             <a class="imdb" href="https://www.imdb.com/find?q={{ movie.title }}" target="_blank" title="Find this movie on IMDb">IMDb</a>
 
