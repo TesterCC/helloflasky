@@ -237,7 +237,7 @@ def index():
     return render_template('index.html', user=user, movies=books)
 
 
-@app.route('/book/edit/<int:movie_id>', methods=['GET', 'POST'])
+@app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
 @login_required
 def edit(movie_id):
     book = Book.query.get_or_404(movie_id)
