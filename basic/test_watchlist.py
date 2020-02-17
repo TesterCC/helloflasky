@@ -28,9 +28,12 @@ cd ~/helloflasky/basic
 2. coverage report   # step 1 要运行成功才能有数据，Cover 87%，还需要完善测试
 3. coverage html
 使用 coverage html 命令获取详细的 HTML 格式的覆盖率报告，它会在当前目录生成一个 htmlcov 文件夹，打开其中的 index.html 即可查看覆盖率报告。
+
+https://coverage.readthedocs.io
+执行coverage help命令查看更多用法
 """
 
-# 在项目根目录创建一个明为test_watchlist.py的脚本来存储测试代码，我们先编写测试固件和两个简单的基础测试。
+# 在项目根目录创建一个名为test_watchlist.py的脚本来存储测试代码，我们先编写测试固件和两个简单的基础测试。
 
 import unittest
 
@@ -62,7 +65,7 @@ class WatchlistTestCase(unittest.TestCase):
         # 创建测试数据，一个用户，一个电影条目
         user = User(name='Test', username='test')
         user.set_password('123')
-        movie = Book(title='Test Book Title', year='2020')
+        movie = Book(title='Test Movie Title', year='2020')
         # 使用 add_all() 方法一次添加多个模型类实例，传入列表
         db.session.add_all([user, movie])
         db.session.commit()
@@ -112,7 +115,8 @@ class WatchlistTestCase(unittest.TestCase):
             year='2019'
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
-        self.assertIn('Item created.', data)
+        # self.assertIn('Item created.', data)
+        self.assertIn('Item created successfully.', data)
         self.assertIn('New Movie', data)
 
         # 测试创建条目操作，但电影标题为空
@@ -121,8 +125,9 @@ class WatchlistTestCase(unittest.TestCase):
             year='2019'
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
-        self.assertNotIn('Item created.', data)
-        self.assertIn('Invalid input.', data)
+        # self.assertNotIn('Item created.', data)
+        self.assertNotIn('Item created successfully.', data)
+        self.assertIn('Invalid input!!!', data)   # Invalid input!!!因为我的提示信息文本内容和原来的Demo有差异
 
         # 测试创建条目操作，但电影年份为空
         response = self.client.post('/', data=dict(
@@ -130,8 +135,9 @@ class WatchlistTestCase(unittest.TestCase):
             year=''
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
-        self.assertNotIn('Item created.', data)
-        self.assertIn('Invalid input.', data)
+        # self.assertNotIn('Item created.', data)
+        self.assertNotIn('Item created successfully.', data)
+        self.assertIn('Invalid input', data)
 
     # 测试更新条目
     def test_update_item(self):
