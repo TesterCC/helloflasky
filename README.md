@@ -27,6 +27,11 @@ export LANG="zh_CN.UTF-8"
 
 ## About Launch 
 #### Use ".env" or ".flaskenv" launch flask app
-```python
+```bash
 flask run
+```
+
+check program dir structure
+```bash
+tree -L 1 -FC -I "*.pyc"
 ```
