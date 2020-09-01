@@ -34,8 +34,8 @@ def my_microservice():
         ip = ips[0]
     else:
         ip = request.remote_addr
-    return jsonify({"Check IP address": ip})
+    return jsonify({"Detect IP address": ip})
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=5000, debug=True)
