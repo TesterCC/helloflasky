@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test 3-5 Jinja 2</title>
+</head>
+<body>
+<table>
+    <thead>
+    <th>商品名称</th>
+    <th>商品价格</th>
+    </thead>
+    <tbody>
+    {% for production in goods %}
+    <tr>
+        <td>{{ production.name }}</td>
+        <td>{{ production.price }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
