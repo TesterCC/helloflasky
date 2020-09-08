@@ -71,7 +71,7 @@ def set_white_ip(user_name, auth_code):
 
         public_ip = request.remote_addr
 
-        with open(target_path, 'rU') as fc:
+        with open(target_path, 'r') as fc:
             count = len(fc.readlines())  # 文件行数 int
 
         if count == 0 or count > 2:

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket客户端</title>
+</head>
+<body>
+
+
+<script type="application/javascript">
+    var ws = new WebSocket('ws://127.0.0.1:5000/conn');   //建立websocket链接
+    //接收数据
+    ws.onmessage = function (messageEvent) {
+        console.log(messageEvent.data)
+    }
+</script>
+</body>
+</html>

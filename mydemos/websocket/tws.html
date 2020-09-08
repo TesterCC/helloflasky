@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Websocket5</title>
+</head>
+<body>
+    <script type="text/javascript">
+        let ws = new WebSocket("ws://127.0.0.1:5000/conn");
+        ws.onmessage = function (data) {
+            let msg = JSON.parse(data.data);
+            console.log(msg)
+        }
+    </script>
+</body>
+</html>
