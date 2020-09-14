@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Jinja EDU</title>
+</head>
+<body>
+<div> _____________________________________</div>
+Welcome to Test EDU : student
+<div>{{ student }}</div>
+<table border="1px">
+    <tr>
+        <td>{{ student.name }}</td>
+        <td>{{ student["age"] }}</td>
+        <td>{{ student["gender"] }}</td>
+        {#        <td>{{ student.get("gender") }}</td>#}
+    </tr>
+</table>
+<div> _____________________________________</div>
+Welcome to Test EDU : student_list
+<div>{{ student_list }}</div>
+<table border="1xp">
+    {% for foo in student_list %}
+        <tr>
+            <td>{{ foo }}</td>
+            <td>{{ foo.name }}</td>
+            <td>{{ foo.get("age") }}</td>
+            <td>{{ foo["gender"] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<div> _____________________________________</div>
+Welcome to Test EDU : student_dict
+<div>{{ student_dict }}</div>
+<table border="1xp">
+    {% for foo in student_dict %}
+        <tr>
+            <td>{{ foo }}</td>
+            <td>{{ student_dict.get(foo).name }}</td>
+            <td>{{ student_dict[foo].get("age") }}</td>
+            <td>{{ student_dict[foo]["gender"] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
