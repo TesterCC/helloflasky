@@ -26,6 +26,7 @@ class XFFMiddleware:
 app = Flask(__name__)
 app.wsgi_app = XFFMiddleware(app.wsgi_app)
 
+
 # curl 127.0.0.1:5000/api
 @app.route('/api')
 def my_microservice():

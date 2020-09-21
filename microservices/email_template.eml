@@ -1,0 +1,22 @@
+Date: {{ date }}
+From: {{ from }}
+Subject: {{ subject }}
+To: {{ to }}
+Content-Type: text/plain
+
+Hello {{ name }},
+
+We have received your issues!
+
+Below is the list of books:
+
+{% for item in items %}
+
+{{ item['name'] }} - {{ item['price'] }}
+
+{% endfor %}
+
+Thank you for your suggestion!
+
+--
+www.fullstackpentest.com
