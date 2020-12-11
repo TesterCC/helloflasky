@@ -27,7 +27,7 @@ def JsonApp(app):
             description = abort.mapping[500].description
             result = {
                 'code': 500,
-                'description': error.description,
+                'description': description,
                 'message': str(error)
             }
 

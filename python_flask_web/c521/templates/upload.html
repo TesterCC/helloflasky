@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Demo</title>
+    <style type="text/css">
+        .div1{
+            height:180px;
+            width: 380px;
+            border: 1px solid #8A8989;
+            margin: 0 auto;
+        }
+
+        .input{
+            display: block;
+            width: 250px;
+            height: 30px;
+            margin: 10px auto;
+        }
+
+        .button{
+            background: #2066C5;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            height: 30px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="div1">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" class="input">
+        <input type="submit" value="click to upload" class="input button">
+    </form>
+
+</div>
+
+</body>
+</html>
