@@ -34,10 +34,10 @@ app = Flask(__name__)
 # elif platform.system() == 'Linux':
 #     slash = '/'
 
-DIR_PATH = 'static/delivery/'
+DIR_PATH = 'static/upload/'
 UPLOAD_PATH = os.path.curdir + DIR_PATH
-
-# print(f"[+] upload path is {UPLOAD_PATH}")
+# print(os.path.curdir)  # .
+print(f"[+] upload path is {UPLOAD_PATH}")
 
 def check_upload_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
@@ -58,8 +58,8 @@ def upload():
     else:
 
         # 没有指定的DIR_PATH目录就创建目录
-        if not os.path.exists(UPLOAD_PATH):
-            os.makedirs(UPLOAD_PATH)
+        if not os.path.exists(DIR_PATH):
+            os.makedirs(DIR_PATH)
 
         f = request.files['file']                # get file stream
         # print(f.headers)
@@ -93,7 +93,7 @@ def upload():
 
 
                 f.save(path.join(DIR_PATH, filename))     # Noted: DIR_PATH 注意slash位置
-                print(DIR_PATH + filename)   # url path ： http://127.0.0.1:5000/static/delivery/c3ead32e2ee04b1d87e1115a753137f0.png
+                print(DIR_PATH + filename)   # url path ： http://127.0.0.1:5000/static/upload/1ec04f8610b44bcd85a89c86aaa7bac8.png
 
 
                 code = 1
