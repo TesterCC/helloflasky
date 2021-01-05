@@ -14,14 +14,16 @@ import sys
 import time
 import traceback
 
+import uuid
+
+
 from flask import Flask,render_template,request,jsonify
 
 rand_str = "abcdefghijklmnopqrstuvwxyz0123456789"
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
 
 # print(f'[+] platform system: {platform.system()}')
 
@@ -32,11 +34,19 @@ app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
 # elif platform.system() == 'Linux':
 #     slash = '/'
 
-UPLOAD_PATH = os.path.curdir + '/static/'
+DIR_PATH = 'static/delivery/'
+UPLOAD_PATH = os.path.curdir + DIR_PATH
+
 # print(f"[+] upload path is {UPLOAD_PATH}")
 
 def check_upload_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+def random_filename(filename):
+    ext = os.path.splitext(filename)[1]
+    new_filename = uuid.uuid4().hex + ext
+    return new_filename
 
 
 @app.route('/upload', methods=['POST','GET'])
@@ -47,28 +57,50 @@ def upload():
         return render_template('upload.html')
     else:
 
-        # 没有目录就创建目录
+        # 没有指定的DIR_PATH目录就创建目录
         if not os.path.exists(UPLOAD_PATH):
             os.makedirs(UPLOAD_PATH)
 
         f = request.files['file']                # get file stream
-
-        if f and check_upload_file(f.filename):
-            # 统一处理上传文件名
-            # 可以使用 用户名+时间戳 的md5值 作为文件名
-            # 可以使用 时间戳的md5值 + N位随机字符 作为文件名
-            # print("file: ", f)
-            ext = f.filename.rsplit('.', 1)[1]  # get suffix
-
-            filename = hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()[:13] + "".join(
-                random.sample(rand_str, 2)) + '.' + ext
-
-            f.save(path.join('static',filename))     # Noted: 指定一级目录，可减少处理slash的逻辑
-            code = 1
-            err = 'upload success'
+        # print(f.headers)
+        print(f.content_type)
+        # print(f.content_length)  # 前端不传的话就是0
+        size = len(f.read())   # 文件指针会指到最后读取内容
+        f.seek(0)   # 重新定义指针的文件开头，不然save()会保存为空。
+        convert_size = size / 1024 / 1024
+        # print(convert_size)   # 单位是M
+        # print(size)  #  float, 单位是字节 byte, 1M = 1024 KB = 1024 * 1024 Byte = 1024 * 1024 * 8 bit
+        if convert_size > 2:
+            code, err = 99, '文件超出最大限制'
 
         else:
-            err = 'There is some error.'
+            if f and check_upload_file(f.filename):
+                # 注意：自行统一处理上传文件名
+                # 可以使用 用户名+时间戳 的md5值 作为文件名
+                # 可以使用 时间戳的md5值 + N位随机字符 作为文件名
+                # print("file: ", f)
+
+                # # method 1：don't recommend
+                # ext = f.filename.rsplit('.', 1)[1]  # get suffix
+                #
+                # # 用python内置的uuid模块生成随机文件名的random_filename()函数
+                # filename = hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()[:13] + "".join(
+                #     random.sample(rand_str, 2)) + '.' + ext
+
+                # method 2:
+                filename = random_filename(f.filename)
+                print(filename)
+
+
+                f.save(path.join(DIR_PATH, filename))     # Noted: DIR_PATH 注意slash位置
+                print(DIR_PATH + filename)   # url path ： http://127.0.0.1:5000/static/delivery/c3ead32e2ee04b1d87e1115a753137f0.png
+
+
+                code = 1
+                err = 'upload success'
+
+            else:
+                code, err = 99, 'invalid file'
 
         return jsonify({
             'code':code,
