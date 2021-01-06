@@ -7,7 +7,6 @@ AUTHOR: Yanxi Li
 
 import hashlib
 import os
-from os import path
 import platform
 import random
 import sys
@@ -16,10 +15,9 @@ import traceback
 
 import uuid
 
+from flask import Flask, render_template, request, jsonify
 
-from flask import Flask,render_template,request,jsonify
-
-rand_str = "abcdefghijklmnopqrstuvwxyz0123456789"
+# rand_str = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -39,6 +37,7 @@ UPLOAD_PATH = os.path.curdir + DIR_PATH
 # print(os.path.curdir)  # .
 print(f"[+] upload path is {UPLOAD_PATH}")
 
+
 def check_upload_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
@@ -49,7 +48,7 @@ def random_filename(filename):
     return new_filename
 
 
-@app.route('/upload', methods=['POST','GET'])
+@app.route('/upload', methods=['POST', 'GET'])
 def upload():
     data, code, err = None, 0, None
 
@@ -61,12 +60,12 @@ def upload():
         if not os.path.exists(DIR_PATH):
             os.makedirs(DIR_PATH)
 
-        f = request.files['file']                # get file stream
+        f = request.files['file']  # get file stream
         # print(f.headers)
         print(f.content_type)
         # print(f.content_length)  # 前端不传的话就是0
-        size = len(f.read())   # 文件指针会指到最后读取内容
-        f.seek(0)   # 重新定义指针的文件开头，不然save()会保存为空。
+        size = len(f.read())  # 文件指针会指到最后读取内容
+        f.seek(0)  # 重新定义指针的文件开头，不然save()会保存为空。
         convert_size = size / 1024 / 1024
         # print(convert_size)   # 单位是M
         # print(size)  #  float, 单位是字节 byte, 1M = 1024 KB = 1024 * 1024 Byte = 1024 * 1024 * 8 bit
@@ -91,10 +90,9 @@ def upload():
                 filename = random_filename(f.filename)
                 print(filename)
 
-
-                f.save(path.join(DIR_PATH, filename))     # Noted: DIR_PATH 注意slash位置
-                print(DIR_PATH + filename)   # url path ： http://127.0.0.1:5000/static/upload/1ec04f8610b44bcd85a89c86aaa7bac8.png
-
+                f.save(os.path.join(DIR_PATH, filename))  # Noted: DIR_PATH 注意slash位置
+                print(
+                    DIR_PATH + filename)  # url path ： http://127.0.0.1:5000/static/upload/1ec04f8610b44bcd85a89c86aaa7bac8.png
 
                 code = 1
                 err = 'upload success'
@@ -103,10 +101,11 @@ def upload():
                 code, err = 99, 'invalid file'
 
         return jsonify({
-            'code':code,
-            'msg':err,
+            'code': code,
+            'msg': err,
             'data': data
         })
+
 
 if __name__ == '__main__':
     app.run(debug=True)

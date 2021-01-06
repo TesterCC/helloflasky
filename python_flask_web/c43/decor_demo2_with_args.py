@@ -18,32 +18,39 @@ from functools import wraps
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
+
 
 def user_login(func):
     @wraps(func)  # 使用wraps在装饰器的函数上对传进来的函数进行包裹，这样就不会丢失原始函数
     def inner(*args, **kwargs):
         print("登录时操作")  # 打印模拟登录操作
-        func(*args, **kwargs)              # user_login()接收到的函数
+        func(*args, **kwargs)  # user_login()接收到的函数
+
     return inner
+
 
 @user_login
 def news():
     print(news.__name__)
     print("There is news detail.")
 
+
 news()
 print(news.__name__)
 
-print("-"*33)
+print("-" * 33)
+
 
 @user_login
 def news_list(*args):
     page = args[0]
     print(news_list.__name__)
-    print("This is news list page "+str(page))
+    print("This is news list page " + str(page))
+
 
 news_list(7)
 
